@@ -67,13 +67,36 @@ class Application(tk.Tk):
         self.playerFrameLoop = 0
         self.analyzeNumPlayer()
     
-        print(self.horizontal)
-        print(self.vertical)
+        loop = 0
+        for i in range(0,self.horizontal):
+            if (loop < self.numPlayer):
+                self.initPlayerFrame(i, 0, loop)
+                loop += 1
 
-    def initPlayerFrame(self, col, row):
+        for i in range(0, self.vertical):
+            if (loop < self.numPlayer):
+                self.initPlayerFrame(self.horizontal - 1, i + 1, loop)
+                loop += 1
+    
+        for i in range(self.horizontal - 1, -1 , -1):            
+            if (loop < self.numPlayer):
+                self.initPlayerFrame(i, self.vertical + 1, loop)
+                loop += 1
 
+        for i in range(self.vertical - 1, -1 , -1):
+            if (loop < self.numPlayer):
+                self.initPlayerFrame(0, i + 1, loop)
+                loop += 1
+
+        del loop
+        
+
+
+
+    def initPlayerFrame(self, col, row, index):
+        tempPlayer = self.gb.p[index]
         temp = tk.Frame(self)
-        label = tk.Label(temp, text = "Nothing")
+        label = tk.Label(temp, text = tempPlayer.name)
         label.pack()
         temp.grid(column = col, row = row)
         self.playerFrame.append(temp)
@@ -83,7 +106,7 @@ class Application(tk.Tk):
 
         temp = (self.numPlayer - 4) // 4 
         self.horizontal = temp + 1 + 2
-        self.vertical = temp - 1 - 2
+        self.vertical = temp - 1
 
     def startGameEvent(self):
         self.startGameFrame.destroy()

@@ -17,13 +17,3 @@ class Game_board():
         self.listCard.remove(temp)
         self.p[index] = tempPlayer
 
-    def getNameIndex(self, index):
-        return self.p[index].name
-    
-    def getCardNameIndex(self, index):
-        if self.p[index].card == Wolf:
-            self.p[index].card_name = "Wolf"
-        if self.p[index].card == Villager:
-            self.p[index].card_name = "Villager"
-        return self.p[index].card_name
-    

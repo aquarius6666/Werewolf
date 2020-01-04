@@ -1,4 +1,5 @@
 import tkinter as tk
+
 from Game_board import Game_board
 
 class Application(tk.Tk):
@@ -7,12 +8,9 @@ class Application(tk.Tk):
 
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("Game: WereWolf")
-        
         self.inNumPlayer()
 
 
-
-    
     def inNumPlayer(self):
         
         self.inNumPlayerFrame = tk.Frame(self)
@@ -64,7 +62,10 @@ class Application(tk.Tk):
         self.startButton.pack(side = tk.BOTTOM)
 
     def Board(self):
-
+        self.boardFrame = tk.Frame(self)
+        self.boardBgImage = tk.PhotoImage(file = r"C:\Users\Anhtu\Desktop\Project\pic\bg.jpg")
+        self.boardBg = tk.Label(self.boardFrame, image = self.boardBgImage)
+        self.boardFrame.pack()
         self.playerFrame = [None] * self.numPlayer
         self.playerFrameLoop = 0
         self.analyzeNumPlayer()
@@ -97,18 +98,18 @@ class Application(tk.Tk):
     def initPlayerFrame(self, col, row, index, fg_name = "red", fg_card = "blue", fg_status = "green"):
         _player = self.gb.p[index]
 
-        _frame = tk.Frame(self, borderwidth=3, relief = tk.RAISED)
+        _frame = tk.Frame(self.boardFrame, borderwidth=3, relief = tk.RAISED)
         self.playerFrames[index] = _frame
 
-        _nameLabel = tk.Label(_frame, text = _player.name, fg = fg_name, font = ("bold", 11))
+        _nameLabel = tk.Label(_frame, text = _player.name, fg = fg_name, font = ("bold", 11), width = 9)
         _nameLabel.pack(side = tk.TOP)
         self.nameLabel[index] = _nameLabel
 
-        _cardLabel = tk.Label(_frame, text = _player.card_name, fg = fg_card)
+        _cardLabel = tk.Label(_frame, text = _player.card_name, fg = fg_card, width = 9)
         _cardLabel.pack(side = tk.TOP)
         self.cardLabel[index] = _cardLabel
 
-        _statusLabel = tk.Label(_frame, text = _player.status, fg = fg_status)
+        _statusLabel = tk.Label(_frame, text = _player.status, fg = fg_status, width = 9)
         _statusLabel.pack(side = tk.TOP)
         self.statusLabel[index] = _statusLabel
 
@@ -118,7 +119,9 @@ class Application(tk.Tk):
 
     def analyzeNumPlayer(self):
 
-        temp = (self.numPlayer - 4) // 4 
+        temp = (self.numPlayer - 4) / 4
+        if temp >int(temp):
+            temp = int(temp) + 1 
         self.horizontal = temp + 1 + 2
         self.vertical = temp - 1
 

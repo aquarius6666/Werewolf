@@ -94,21 +94,21 @@ class Application(tk.Tk):
                 self.initPlayerFrame(0, i + 1, loop)
                 loop += 1
         
-    def initPlayerFrame(self, col, row, index):
+    def initPlayerFrame(self, col, row, index, fg_name = "red", fg_card = "blue", fg_status = "green"):
         _player = self.gb.p[index]
 
-        _frame = tk.Frame(self, borderwidth=1, relief = tk.RAISED)
+        _frame = tk.Frame(self, borderwidth=3, relief = tk.RAISED)
         self.playerFrames[index] = _frame
 
-        _nameLabel = tk.Label(_frame, text = _player.name, fg = "red")
+        _nameLabel = tk.Label(_frame, text = _player.name, fg = fg_name, font = ("bold", 11))
         _nameLabel.pack(side = tk.TOP)
         self.nameLabel[index] = _nameLabel
 
-        _cardLabel = tk.Label(_frame, text = _player.card_name, fg = "blue")
+        _cardLabel = tk.Label(_frame, text = _player.card_name, fg = fg_card)
         _cardLabel.pack(side = tk.TOP)
         self.cardLabel[index] = _cardLabel
 
-        _statusLabel = tk.Label(_frame, text = _player.status, fg = "green")
+        _statusLabel = tk.Label(_frame, text = _player.status, fg = fg_status)
         _statusLabel.pack(side = tk.TOP)
         self.statusLabel[index] = _statusLabel
 

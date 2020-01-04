@@ -21,7 +21,8 @@ class Application(tk.Tk):
         self.entryLabel = tk.Label(self.inNumPlayerFrame, text = "Nhập số lượng người chơi:")
         self.entryLabel.pack(side = tk.LEFT)
 
-        self.entry = tk.Entry(self.inNumPlayerFrame, width = 5, takefocus = True)
+        self.entry = tk.Entry(self.inNumPlayerFrame, width = 5)
+        self.entry.focus()
         self.entry.pack(side = tk.LEFT)
         self.entry.bind("<Return>", self.inNumPlayerCF)
 
@@ -33,7 +34,8 @@ class Application(tk.Tk):
         self.entryNameLabel = tk.Label(self.inNamePlayerFrame, text = "Nhập tên người chơi:")
         self.entryNameLabel.pack(side = tk.LEFT)
 
-        self.entryName = tk.Entry(self.inNamePlayerFrame, width = 7, takefocus = True)
+        self.entryName = tk.Entry(self.inNamePlayerFrame, width = 7)
+        self.entryName.focus()
         self.entryName.pack(side = tk.LEFT)
         self.entryName.bind("<Return>", self.inNamePlayerCF)
         self.entryNameLoop = 0
@@ -63,10 +65,14 @@ class Application(tk.Tk):
 
     def Board(self):
 
-        self.playerFrame = [None]
+        self.playerFrame = [None] * self.numPlayer
         self.playerFrameLoop = 0
         self.analyzeNumPlayer()
-    
+        self.nameLabel = [None] * self.numPlayer
+        self.cardLabel = [None] * self.numPlayer
+        self.statusLabel = [None] * self.numPlayer
+        self.playerFrames = [None] * self.numPlayer
+
         loop = 0
         for i in range(0,self.horizontal):
             if (loop < self.numPlayer):
@@ -87,19 +93,27 @@ class Application(tk.Tk):
             if (loop < self.numPlayer):
                 self.initPlayerFrame(0, i + 1, loop)
                 loop += 1
-
-        del loop
         
-
-
-
     def initPlayerFrame(self, col, row, index):
-        tempPlayer = self.gb.p[index]
-        temp = tk.Frame(self)
-        label = tk.Label(temp, text = tempPlayer.name)
-        label.pack()
-        temp.grid(column = col, row = row)
-        self.playerFrame.append(temp)
+        _player = self.gb.p[index]
+
+        _frame = tk.Frame(self, borderwidth=1, relief = tk.RAISED)
+        self.playerFrames[index] = _frame
+
+        _nameLabel = tk.Label(_frame, text = _player.name, fg = "red")
+        _nameLabel.pack(side = tk.TOP)
+        self.nameLabel[index] = _nameLabel
+
+        _cardLabel = tk.Label(_frame, text = _player.card_name, fg = "blue")
+        _cardLabel.pack(side = tk.TOP)
+        self.cardLabel[index] = _cardLabel
+
+        _statusLabel = tk.Label(_frame, text = _player.status, fg = "green")
+        _statusLabel.pack(side = tk.TOP)
+        self.statusLabel[index] = _statusLabel
+
+        _frame.grid(column = col, row = row)
+        self.playerFrame[index] = _frame
 
 
     def analyzeNumPlayer(self):

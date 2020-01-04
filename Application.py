@@ -1,5 +1,6 @@
 import tkinter as tk
 from Game_board import Game_board
+from PIL import Image, ImageTk
 
 DEAD = "Dead"
 ALIVE = "Alive"
@@ -45,6 +46,7 @@ class Application(tk.Tk):
         
     def inNamePlayerCF(self, event):
         namePlayer = self.entryName.get()
+        self.entryName.config(state = 'disabled')
         self.gb.initPlayer(namePlayer, self.entryNameLoop)
         cardPlayer = self.gb.p[self.entryNameLoop].card_name
         self.entryNameLoop = self.entryNameLoop + 1
@@ -64,8 +66,10 @@ class Application(tk.Tk):
         self.startButton.pack(side = tk.BOTTOM)
 
     def Board(self):
+
         self.boardFrame = tk.Frame(self)
         self.boardFrame.pack()
+
         self.playerFrame = [None] * self.numPlayer
         self.playerFrameLoop = 0
         self.analyzeNumPlayer()
@@ -141,7 +145,7 @@ class Application(tk.Tk):
         self.voteButton.pack()
 
     def Vote(self):
-        self.entryVote = tk.Entry(self.buttonFrame, width = 3)
+        self.voteCombobox = tk.Combobox(self.buttonFrame, tex)
         self.entryVote.pack()
         self.entryVote.bind("<Return>", self.VoteEvent)
     
@@ -173,6 +177,7 @@ class Application(tk.Tk):
 
 
     def newEntryNameButtonEvent(self):
+        self.entryName.config(state = 'normal')
         self.entryName.delete(0,len(self.entryName.get()))
         self.newEntryNameButton.destroy()
         self.printCardLabel.destroy()

@@ -1,6 +1,7 @@
 import tkinter as tk
 from Game_board import Game_board
 from PIL import Image, ImageTk
+from Player import Wolf, Villager
 
 DEAD = "Dead"
 ALIVE = "Alive"
@@ -10,7 +11,6 @@ class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
 
         tk.Tk.__init__(self, *args, **kwargs)
-        self.geometry('300x24')
         self.title("Game: WereWolf")
         self.inNumPlayer()
 
@@ -67,7 +67,6 @@ class Application(tk.Tk):
         self.startButton.pack(side = tk.BOTTOM)
 
     def Board(self):
-
         self.boardFrame = tk.Frame(self)
         self.boardFrame.pack()
 
@@ -109,7 +108,14 @@ class Application(tk.Tk):
                 loop += 1
         self.buttonFrame = tk.Frame(self)
         self.buttonFrame.pack(side = tk.BOTTOM)
-        self.DayTimeButton = tk.Button(self.buttonFrame, text = "Daytime", command = self.DayTime)
+
+        self.dayTimeFrame = tk.Frame(self.buttonFrame)
+        self.dayTimeFrame.pack(side = tk.TOP)
+
+        self.nightTimeFrame = tk.Frame(self.buttonFrame)
+        self.nightTimeFrame.pack(side = tk.BOTTOM)
+        
+        self.DayTimeButton = tk.Button(self.dayTimeFrame, text = "Daytime", command = self.DayTime)
         self.DayTimeButton.pack()
     
 
@@ -143,15 +149,20 @@ class Application(tk.Tk):
                 self.nameLabel[i].config(fg = "red")
 
     def DayTime(self):
+        self.nightTimeFrame.destroy()
+        for i in range(0, self.numPlayer):
+            self.statusLabel[i].config(text = "")
+            self.cardLabel[i].config(text = "")
+
         self.timeLabel.config(text = self.textTimeLabel + "Daytime")
         self.dead_man_cant_talk()
-        self.voteButton = tk.Button(self.buttonFrame, text = "VOTE", command = self.Vote)
+        self.voteButton = tk.Button(self.dayTimeFrame, text = "VOTE", command = self.Vote)
         self.voteButton.pack()
 
     def Vote(self):
-        self.voteText = tk.Label(self.buttonFrame, text = "Chọn 1 người để treo cổ ")
+        self.voteText = tk.Label(self.dayTimeFrame, text = "Chọn 1 người để treo cổ ")
         self.voteText.pack(side = tk.LEFT)
-        self.entryVote = tk.Entry(self.buttonFrame, width = 5)
+        self.entryVote = tk.Entry(self.dayTimeFrame, width = 5)
         self.entryVote.pack()
         self.entryVote.bind("<Return>", self.VoteEvent)
     
@@ -159,17 +170,29 @@ class Application(tk.Tk):
         playerIndex = int(self.entryVote.get())
         playerIndex -= 1
         self.gb.p[playerIndex].status = DEAD
-        self.entryVote.destroy()
-        self.voteButton.destroy()
-        self.voteText.destroy()
-        self.Nighttime()
 
-    def Nighttime(self):
-        self.timeLabel.config(text = self.textTimeLabel + "Nighttime")
+        self.dayTimeFrame.destroy()
+
+        self.Nightime()
+
+    def Nightime(self):
+        self.timeLabel.config(text = self.textTimeLabel + "Nightime")
         self.dead_man_cant_talk()
+        self.WolfButton = tk.Button(self.nightTimeFrame, text = "Wolf", command = self.WolfTime)
+        self.WolfButton.pack(side = tk.LEFT)
+    
 
+    def DisplayCard(self, card):
+        for i in range(0, self.numPlayer):
+            if self.gb.p[i].card == card and self.gb.p[i].status != DEAD:
+                self.cardLabel[i].config(text = self.gb.p[i].card_name, fg = "black")
+    
+    def WolfTime(self):
+        self.timeLabel.config(text = self.textTimeLabel + "Wolf")
+        self.DisplayCard(Wolf)
         
-
+    def changeDayTimeEvent(self, event):
+        pass
     def analyzeNumPlayer(self):
 
         temp = (self.numPlayer - 4) / 4

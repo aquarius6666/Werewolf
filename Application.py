@@ -10,6 +10,7 @@ class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
 
         tk.Tk.__init__(self, *args, **kwargs)
+        self.geometry('300x24')
         self.title("Game: WereWolf")
         self.inNumPlayer()
 
@@ -70,6 +71,9 @@ class Application(tk.Tk):
         self.boardFrame = tk.Frame(self)
         self.boardFrame.pack()
 
+
+        self.bgImage = ImageTk.PhotoImage(Image.open("C:\\Users\\Anhtu\\Desktop\\Project\\pic\\bg.jpg"))
+        self.bgLabel = tk.Label(self.boardFrame, image = self.bgImage)
         self.playerFrame = [None] * self.numPlayer
         self.playerFrameLoop = 0
         self.analyzeNumPlayer()
@@ -145,7 +149,9 @@ class Application(tk.Tk):
         self.voteButton.pack()
 
     def Vote(self):
-        self.voteCombobox = tk.Combobox(self.buttonFrame, tex)
+        self.voteText = tk.Label(self.buttonFrame, text = "Chọn 1 người để treo cổ ")
+        self.voteText.pack(side = tk.LEFT)
+        self.entryVote = tk.Entry(self.buttonFrame, width = 5)
         self.entryVote.pack()
         self.entryVote.bind("<Return>", self.VoteEvent)
     
@@ -155,6 +161,7 @@ class Application(tk.Tk):
         self.gb.p[playerIndex].status = DEAD
         self.entryVote.destroy()
         self.voteButton.destroy()
+        self.voteText.destroy()
         self.Nighttime()
 
     def Nighttime(self):

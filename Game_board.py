@@ -10,9 +10,10 @@ class Game_board():
         self.list = [Wolf] * self.nWolf + [Villager] * self.nVillager
         self.p = []
 
-    def initPlayer(self, index, name):
-        
-        temp = Player(name, index)
-        self.p.append(temp)
+    def initPlayer(self, player):
+        tempCard = choice(self.list)
+        self.list.remove(tempCard)
+        player.drawCard(tempCard)
+        self.p.append(player)
 
     

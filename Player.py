@@ -15,6 +15,7 @@ class Player:
     def drawCard(self, card):
 
         self.card_name = card()
+        self.card = card
     
 
 

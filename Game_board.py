@@ -14,4 +14,4 @@ class Game_board():
         tempCard = choice(self.list)
         self.list.remove(tempCard)
         player.drawCard(tempCard)
-        self.p.append(player
+        self.p.append(player)

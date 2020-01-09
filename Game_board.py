@@ -1,19 +1,18 @@
-
 from Player import Player, Wolf, Villager
 from random import choice
-class Game_board():
+class Game_board(): 
 
     def __init__(self, num):
+        
         self.numPlayer = num
-        self.p = [None] * self.numPlayer
-        self.nWolfCard = num // 3
-        self.nVillagerCard = num - self.nWolfCard
-        self.listCard = [Wolf] * self.nWolfCard + [Villager] * self.nVillagerCard
+        self.nWolf = self.numPlayer // 3
+        self.nVillager = self.numPlayer - self.nWolf
+        self.list = [Wolf] * self.nWolf + [Villager] * self.nVillager
+        self.p = []
 
-    def initPlayer(self, name, index):
-        tempPlayer = Player(name, index)
-        temp = choice(self.listCard)
-        tempPlayer.draw_card(temp)
-        self.listCard.remove(temp)
-        self.p[index] = tempPlayer
+    def initPlayer(self, index, name):
+        
+        temp = Player(name, index)
+        self.p.append(temp)
 
+    

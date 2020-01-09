@@ -43,6 +43,8 @@ class Application(tk.Tk):
 
         index = 0
 
+        self.borderPlayer(1,1,index)
+
         
 
     
@@ -119,4 +121,3 @@ class Application(tk.Tk):
 app = Application()
 
 app.mainloop()
-

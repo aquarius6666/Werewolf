@@ -1,4 +1,9 @@
 
+ALIVE = "Alive"
+DEAD  = "Dead"
+
+
+
 def Wolf():
     return "Wolf"
 
@@ -11,6 +16,7 @@ class Player:
         
         self.name = name
         self.index = id
+        self.status = ALIVE
         
     def drawCard(self, card):
 

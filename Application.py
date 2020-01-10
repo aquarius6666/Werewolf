@@ -61,7 +61,33 @@ class Application(tk.Tk):
             self.borderPlayer(0, i, index)
             index += 1
 
+        self.currTime()
+   
+    def currTime(self):
+
+        self.currTimeFrame = tk.Frame(self)
+        self.currTimeFrame.pack()
+
+        self.currTimeText = "Current: "
+        self.currTimeLbl = tk.Label(self.currTimeFrame, text = self.currTimeText)
+        self.currTimeLbl.pack()
+
+        self.nightTime()
+
+
+    def nightTime(self):
         
+        self.currTimeLbl.config(text = self.currTimeText + "Night")
+
+        self.nightFrame = tk.Frame(self)
+        self.nightFrame.pack()
+
+        self.wolfButton = tk.Button(self.nightFrame, text = "Wolf", command = self.WolfTime)
+        self.wolfButton.pack(side = tk.LEFT)
+
+
+    def WolfTime(self):
+
 
     
 
@@ -84,6 +110,9 @@ class Application(tk.Tk):
         nameText = str(tempPlayer.index + 1) + ". " + tempPlayer.name
         nameLbl = tk.Label(borderFrame, text = nameText, width = 9, fg = "blue")
         nameLbl.pack(side = tk.TOP)
+
+        statusText = tempPlayer.status
+        statusLbl = tk.Label(borderFrame, text = statusText, width = 9)
 
 
         self.borderFrames[index] = borderFrame

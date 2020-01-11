@@ -93,14 +93,45 @@ class Application(tk.Tk):
         self.wolfButton.grid(row = 1, column = 1)
 
 
+    def dayTime(self):
+
+        self.currTimeLbl.config(text = self.currTimeText + "Day")
+
+        self.dayFrame = tk.Frame(self)
+        self.dayFrame.pack()
+
+        self.voteButton = tk.Button(self.dayFrame, text = "Vote", command = self.Vote)
+        self.voteButton.grid(row = 1, column = 1)
+
+    def Vote(self):
+
+        self.voteLbl = tk.Label(self.dayFrame, text = "Chọn treo cổ 1 người")
+        self.voteLbl.grid(row = 2, column = 1)
+
+        self.voteEntry = tk.Entry(self.dayFrame, width = 2)
+        self.voteEntry.grid(row = 2, column = 2)
+        self.voteEntry.bind("<Return>", self.voteEntryEvent)
+
+    def voteEntryEvent(self):
+
+        target = int(self.voteEntry.get())
+        target -= 1
+        self.gb.p[target].update(DEAD)
+        
+        self.dayFrame.destroy()
+        self.nightTime()
+
     def WolfTime(self):
         
         self.show(Wolf)
-    
-        self.wolfLbl = tk.Label(self.nightFrame, text = "Sói chọn người để cắn")
+
+        self.wolfFrame = tk.Frame(self.nightFrame)
+        self.wolfFrame.pack()
+
+        self.wolfLbl = tk.Label(self.wolfFrame, text = "Sói chọn người để cắn")
         self.wolfLbl.grid(row = 2, column = 1)
 
-        self.wolfEntry = tk.Entry(self.nightFrame, width = 2)
+        self.wolfEntry = tk.Entry(self.wolfFrame, width = 2)
         self.wolfEntry.grid(row = 2, column = 2)
         self.wolfEntry.bind("<Return>", self.wolfEntryEvent)
 
@@ -108,8 +139,10 @@ class Application(tk.Tk):
 
         target = int(self.wolfEntry.get())
         target -= 1
-        self.gb.p[target].status = DEAD
-        self.show(DEAD)
+        self.gb.p[target].update(DEAD)
+        
+        self.wolfFrame.destroy()
+
 
 
     def show(self, sth):

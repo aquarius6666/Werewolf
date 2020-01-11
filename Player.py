@@ -22,6 +22,15 @@ class Player:
 
         self.card = card
         self.card_name = card()
+
+    def update(self, sth):
+
+        if type(sth) == type(self.status):
+            self.status = sth
+        elif type(sth) == type(self.card):
+            self.card = sth
+            self.card_name = self.card()
+        
     
 
 

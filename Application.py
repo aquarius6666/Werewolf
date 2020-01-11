@@ -1,6 +1,7 @@
 import tkinter as tk 
 from Game_board import Game_board
 from Player import Player
+from BorderFrame import BorderFrame
 from math import sqrt, floor, ceil
 
 
@@ -87,7 +88,7 @@ class Application(tk.Tk):
 
 
     def WolfTime(self):
-
+        self.boardFrame[1]
 
     
 
@@ -104,22 +105,10 @@ class Application(tk.Tk):
     def borderPlayer(self, col, row, index):
         tempPlayer = self.gb.p[index]
 
-        borderFrame = tk.Frame(self.boardFrame, relief = tk.RAISED, borderwidth = 3)
-        borderFrame.grid(column = col, row = row, padx = 3, pady = 3)
-
-        nameText = str(tempPlayer.index + 1) + ". " + tempPlayer.name
-        nameLbl = tk.Label(borderFrame, text = nameText, width = 9, fg = "blue")
-        nameLbl.pack(side = tk.TOP)
-
-        statusText = tempPlayer.status
-        statusLbl = tk.Label(borderFrame, text = statusText, width = 9)
-
+        borderFrame = BorderFrame(self, col, row)
+        borderFrame.print(tempPlayer)
 
         self.borderFrames[index] = borderFrame
-
-
-
-
 
     def readName(self):
 

@@ -20,6 +20,7 @@ class Player:
         
     def drawCard(self, card):
 
+        self.card = card
         self.card_name = card()
     
 

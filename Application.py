@@ -1,8 +1,14 @@
 import tkinter as tk 
 from Game_board import Game_board
-from Player import Player
+from Player import Player, Wolf, Villager
 from BorderFrame import BorderFrame
 from math import sqrt, floor, ceil
+
+ALIVE = "Alive"
+DEAD  = "Dead"
+
+
+
 
 
 class Application(tk.Tk):
@@ -41,7 +47,7 @@ class Application(tk.Tk):
         self.boardFrame = tk.Frame(self)
         self.boardFrame.pack()
 
-        self.borderFrames = [None] * self.numPlayer
+        self.borderFrames = []
 
         index = 0
         self.findHozVer()
@@ -84,14 +90,32 @@ class Application(tk.Tk):
         self.nightFrame.pack()
 
         self.wolfButton = tk.Button(self.nightFrame, text = "Wolf", command = self.WolfTime)
-        self.wolfButton.pack(side = tk.LEFT)
+        self.wolfButton.grid(row = 1, column = 1)
 
 
     def WolfTime(self):
-        self.boardFrame[1]
-
+        
+        self.show(Wolf)
     
+        self.wolfLbl = tk.Label(self.nightFrame, text = "Sói chọn người để cắn")
+        self.wolfLbl.grid(row = 2, column = 1)
 
+        self.wolfEntry = tk.Entry(self.nightFrame, width = 2)
+        self.wolfEntry.grid(row = 2, column = 2)
+        self.wolfEntry.bind("<Return>", self.wolfEntryEvent)
+
+    def wolfEntryEvent(self, event):
+
+        target = int(self.wolfEntry.get())
+        target -= 1
+        self.gb.p[target].status = DEAD
+        self.show(DEAD)
+
+
+    def show(self, sth):
+
+        for i in range(0, self.numPlayer):
+            self.borderFrames[i].show(sth)
 
     def findHozVer(self):
 
@@ -103,11 +127,8 @@ class Application(tk.Tk):
         
     
     def borderPlayer(self, col, row, index):
-        tempPlayer = self.gb.p[index]
 
-        borderFrame = BorderFrame(self, col, row, tempPlayer)
-
-
+        borderFrame = BorderFrame(self.boardFrame, col, row, self.gb.p[index])
 
         self.borderFrames.append(borderFrame)
 

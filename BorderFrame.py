@@ -3,13 +3,19 @@ from Player import Player, Wolf, Villager
 
 class BorderFrame(tk.Frame):
 
-    def __init__(self, root, column, row):
+    def __init__(self, master, col, row, player):
 
-        self = tk.Frame(root, relief = tk.RAISED, borderwidth = 3)
-       # self.grid(column = column, row = row, padx = 3, pady = 3)
-        self.pack(side = tk.LEFT)
-        
-    def print(self, tempPlayer):
+        tk.Frame.__init__(self, master, relief = tk.RAISED, borderwidth = 3)
+        self.grid(column = col, row = row)
+        self.col = col
+        self.row = row
+        self.player = player
+
+        self.print()
+
+    def print(self):
+
+        tempPlayer = self.player
 
         nameText = str(tempPlayer.index + 1) + ". " + tempPlayer.name
         self.nameLbl = tk.Label(self, text = nameText, width = 9, fg = "blue")
@@ -19,9 +25,7 @@ class BorderFrame(tk.Frame):
         self.statusLbl = tk.Label(self, text = statusText)
         self.statusLbl.pack(side = tk.TOP)
 
-
         cardNameText = tempPlayer.card_name
         self.cardNameLbl = tk.Label(self, text = cardNameText)
         self.cardNameLbl.pack(side = tk.TOP)
-
 

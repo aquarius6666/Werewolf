@@ -105,10 +105,11 @@ class Application(tk.Tk):
     def borderPlayer(self, col, row, index):
         tempPlayer = self.gb.p[index]
 
-        borderFrame = BorderFrame(self, col, row)
-        borderFrame.print(tempPlayer)
+        borderFrame = BorderFrame(self, col, row, tempPlayer)
 
-        self.borderFrames[index] = borderFrame
+
+
+        self.borderFrames.append(borderFrame)
 
     def readName(self):
 

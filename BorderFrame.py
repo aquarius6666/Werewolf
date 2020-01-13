@@ -1,5 +1,7 @@
 import tkinter as tk
-from Player import Player, Wolf, Villager
+from Player import *
+
+
 
 class BorderFrame(tk.Frame):
 
@@ -37,6 +39,10 @@ class BorderFrame(tk.Frame):
 
         self.cardNameText = self.player.card_name
         self.cardNameLbl.config(text = self.cardNameText)
+        
+        if self.statusText == DEAD:
+            self.statusLbl.config(fg = "red")
+            self.cardNameLbl.config(fg = "red")
 
     def show(self, sth):
 

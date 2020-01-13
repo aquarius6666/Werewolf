@@ -1,12 +1,8 @@
 import tkinter as tk 
 from Game_board import Game_board
-from Player import Player, Wolf, Villager
+from Player import *
 from BorderFrame import BorderFrame
 from math import sqrt, floor, ceil
-
-ALIVE = "Alive"
-DEAD  = "Dead"
-
 
 
 
@@ -62,13 +58,18 @@ class Application(tk.Tk):
 
         for i in range(self.horizontal - 1, -1, -1):
             self.borderPlayer(i, self.vertical - 1, index)
+            if index >= self.numPlayer:
+                break
             index += 1
         
         for i in range (self.vertical - 2, 0, -1):
+            if index >= self.numPlayer:
+                break
             self.borderPlayer(0, i, index)
             index += 1
 
         self.currTime()
+        self.dayFrame = tk.Frame(self)
    
     def currTime(self):
 
@@ -81,22 +82,29 @@ class Application(tk.Tk):
 
         self.nightTime()
 
-
     def nightTime(self):
-        
+
         self.currTimeLbl.config(text = self.currTimeText + "Night")
 
+        self.show(DEAD)
         self.nightFrame = tk.Frame(self)
         self.nightFrame.pack()
 
         self.wolfButton = tk.Button(self.nightFrame, text = "Wolf", command = self.WolfTime)
-        self.wolfButton.grid(row = 1, column = 1)
+        self.wolfButton.pack(side = tk.TOP)
+
+        self.dayButton = tk.Button(self.nightFrame, text = "DayTime", command = self.dayTime)
+        self.dayButton.pack(side = tk.TOP)
+
 
 
     def dayTime(self):
 
+        self.nightFrame.destroy()
         self.currTimeLbl.config(text = self.currTimeText + "Day")
 
+        self.preday()
+        self.show(DEAD)
         self.dayFrame = tk.Frame(self)
         self.dayFrame.pack()
 
@@ -112,12 +120,13 @@ class Application(tk.Tk):
         self.voteEntry.grid(row = 2, column = 2)
         self.voteEntry.bind("<Return>", self.voteEntryEvent)
 
-    def voteEntryEvent(self):
+    def voteEntryEvent(self, event):
 
         target = int(self.voteEntry.get())
         target -= 1
         self.gb.p[target].update(DEAD)
         
+        self.voteButton.config(state = tk.DISABLED)
         self.dayFrame.destroy()
         self.nightTime()
 
@@ -142,9 +151,18 @@ class Application(tk.Tk):
         self.gb.p[target].update(DEAD)
         
         self.wolfFrame.destroy()
+        self.wolfButton.config(state = tk.DISABLED)
+        self.unshow()
 
 
+    def preday(self):
+        for i in range(0, self.numPlayer):
+            if self.gb.p[i].status == ATTACKED:
+                self.gb.p[i].status = DEAD
 
+    def unshow(self):
+        for i in range(0, self.numPlayer):
+            self.borderFrames[i].hide()
     def show(self, sth):
 
         for i in range(0, self.numPlayer):

@@ -1,8 +1,10 @@
 
 ALIVE = "Alive"
 DEAD  = "Dead"
+ATTACKED = "Attacked"
 
-
+def Bodyguard():
+    return "Bodyquard"
 
 def Wolf():
     return "Wolf"

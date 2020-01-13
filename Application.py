@@ -91,7 +91,10 @@ class Application(tk.Tk):
         self.nightFrame.pack()
 
         self.wolfButton = tk.Button(self.nightFrame, text = "Wolf", command = self.WolfTime)
-        self.wolfButton.pack(side = tk.TOP)
+        self.wolfButton.pack(side = tk.LEFT)
+
+        self.bodyquardButton = tk.Button(self.nightFrame, text = "Bodyquard", command = self.BodyQuardTime)
+        self.bodyquardButton.pack(side = tk.LEFT)
 
         self.dayButton = tk.Button(self.nightFrame, text = "DayTime", command = self.dayTime)
         self.dayButton.pack(side = tk.TOP)
@@ -130,12 +133,39 @@ class Application(tk.Tk):
         self.dayFrame.destroy()
         self.nightTime()
 
+
+    def BodyQuardTime(self):
+
+        self.show(Bodyguard)
+        self.bodyquardButton.config(state = tk.DISABLED)
+
+        self.bodyquardFrame = tk.Frame(self.nightFrame)
+        self.bodyquardFrame.pack(side = tk.TOP, padx = 2, pady = 2)
+
+        self.bodyquardLbl = tk.Label(self.bodyquardFrame, text = "Bảo vệ chọn 1 người để bảo vệ")
+        self.bodyquardLbl.grid(row = 2, column = 1)
+
+        self.bodyquardEntry = tk.Entry(self.bodyquardFrame, width = 2)
+        self.bodyquardEntry.grid(row = 2, column = 2)
+        self.bodyquardEntry.bind("<Return>", self.bodyquardEntryEvent)
+
+    def bodyquardEntryEvent(self, event):
+
+        target = int(self.bodyquardEntry.get())
+        target -= 1
+        self.gb.p[target].update(PROTECTED)
+
+        self.bodyquardFrame.destroy()
+
+        self.unshow()
+
     def WolfTime(self):
         
         self.show(Wolf)
+        self.wolfButton.config(state = tk.DISABLED)
 
         self.wolfFrame = tk.Frame(self.nightFrame)
-        self.wolfFrame.pack()
+        self.wolfFrame.pack(side = tk.TOP, padx = 2, pady = 2)
 
         self.wolfLbl = tk.Label(self.wolfFrame, text = "Sói chọn người để cắn")
         self.wolfLbl.grid(row = 2, column = 1)
@@ -148,10 +178,10 @@ class Application(tk.Tk):
 
         target = int(self.wolfEntry.get())
         target -= 1
-        self.gb.p[target].update(DEAD)
+        self.gb.p[target].update(ATTACKED)
         
         self.wolfFrame.destroy()
-        self.wolfButton.config(state = tk.DISABLED)
+
         self.unshow()
 
 

@@ -36,6 +36,21 @@ class Player:
         elif type(sth) == type(self.card):
             self.card = sth
             self.card_name = self.card()
+
+    def isSth(self, sth):
+
+        if type(sth) == type(self.card):
+            if sth == self.card and self.status == ALIVE:
+                return True
+            else:
+                return False
+
+        elif type(sth) == type(self.status):
+            if sth == self.status:
+                return True
+            else:
+                return False
+
         
     
 

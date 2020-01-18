@@ -17,3 +17,11 @@ class Game_board():
         self.list.remove(tempCard)
         player.drawCard(tempCard)
         self.p.append(player)
+
+    def count(self, card):
+        c = 0
+        for p in self.p:
+            if p.isSth(card):
+                c += 1
+
+        return c

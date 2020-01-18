@@ -98,14 +98,17 @@ class Application(tk.Tk):
         self.nightFrame = tk.Frame(self)
         self.nightFrame.pack()
 
-        self.wolfButton = tk.Button(self.nightFrame, text = "Wolf", command = self.WolfTime)
+        self.nightBtns = tk.Frame(self.nightFrame)
+        self.nightBtns.pack(side = tk.TOP)
+
+        self.wolfButton = tk.Button(self.nightBtns, text = "Wolf", command = self.WolfTime)
         self.wolfButton.pack(side = tk.LEFT)
 
-        self.bodyquardButton = tk.Button(self.nightFrame, text = "Bodyquard", command = self.BodyQuardTime)
+        self.bodyquardButton = tk.Button(self.nightBtns, text = "Bodyquard", command = self.BodyQuardTime)
         self.bodyquardButton.pack(side = tk.LEFT)
 
-        self.dayButton = tk.Button(self.nightFrame, text = "DayTime", command = self.dayTime)
-        self.dayButton.pack(side = tk.TOP)
+        self.dayButton = tk.Button(self.nightBtns, text = "DayTime", command = self.dayTime)
+        self.dayButton.pack(side = tk.LEFT)
 
 
 
@@ -119,16 +122,24 @@ class Application(tk.Tk):
         self.dayFrame = tk.Frame(self)
         self.dayFrame.pack()
 
-        self.voteButton = tk.Button(self.dayFrame, text = "Vote", command = self.Vote)
-        self.voteButton.grid(row = 1, column = 1)
+        self.dayBtns = tk.Frame(self.dayFrame)
+        self.dayBtns.pack()
+        
+        self.voteButton = tk.Button(self.dayBtns, text = "Vote", command = self.Vote)
+        self.voteButton.pack()
+        
+        self.dayMsg = tk.Frame(self.dayFrame)
+        self.dayMsg.pack()
 
     def Vote(self):
 
-        self.voteLbl = tk.Label(self.dayFrame, text = "Chọn treo cổ 1 người")
-        self.voteLbl.grid(row = 2, column = 1)
+        self.voteButton.config(state = tk.DISABLED)
 
-        self.voteEntry = tk.Entry(self.dayFrame, width = 2)
-        self.voteEntry.grid(row = 2, column = 2)
+        self.voteLbl = tk.Label(self.dayMsg, text = "Chọn treo cổ 1 người")
+        self.voteLbl.pack(side = tk.LEFT)
+
+        self.voteEntry = tk.Entry(self.dayMsg, width = 2)
+        self.voteEntry.pack(side = tk.LEFT)
         self.voteEntry.bind("<Return>", self.voteEntryEvent)
 
     def voteEntryEvent(self, event):
@@ -137,7 +148,7 @@ class Application(tk.Tk):
         target -= 1
         self.gb.p[target].update(DEAD)
         
-        self.voteButton.config(state = tk.DISABLED)
+        
         self.dayFrame.destroy()
         self.nightTime()
 
@@ -158,14 +169,15 @@ class Application(tk.Tk):
         self.bodyquardEntry.bind("<Return>", self.bodyquardEntryEvent)
 
     def bodyquardEntryEvent(self, event):
-
-        target = int(self.bodyquardEntry.get())
-        target -= 1
-        self.gb.p[target].update(PROTECTED)
+        if self.gb.count(Bodyguard):
+            target = int(self.bodyquardEntry.get())
+            target -= 1
+            self.gb.p[target].update(PROTECTED)
 
         self.bodyquardFrame.destroy()
 
         self.unshow()
+        self.show(DEAD)
 
     def WolfTime(self):
         
@@ -176,21 +188,23 @@ class Application(tk.Tk):
         self.wolfFrame.pack(side = tk.TOP, padx = 2, pady = 2)
 
         self.wolfLbl = tk.Label(self.wolfFrame, text = "Sói chọn người để cắn")
-        self.wolfLbl.grid(row = 2, column = 1)
+        self.wolfLbl.pack(side = tk.LEFT)
 
         self.wolfEntry = tk.Entry(self.wolfFrame, width = 2)
-        self.wolfEntry.grid(row = 2, column = 2)
+        self.wolfEntry.pack(side = tk.LEFT)
         self.wolfEntry.bind("<Return>", self.wolfEntryEvent)
 
     def wolfEntryEvent(self, event):
 
-        target = int(self.wolfEntry.get())
-        target -= 1
-        self.gb.p[target].update(ATTACKED)
-        
+        if self.gb.count(Wolf):
+            target = int(self.wolfEntry.get())
+            target -= 1
+            self.gb.p[target].update(ATTACKED)
+            
         self.wolfFrame.destroy()
 
         self.unshow()
+        self.show(DEAD)
 
 
     def preday(self):
@@ -226,6 +240,12 @@ class Application(tk.Tk):
         self.readNamePlayerFrame = tk.Frame(self)
         self.readNamePlayerFrame.pack()
 
+        self.readNameLoad = Image.open("draw_card.gif")
+        self.readNameCanvas = tk.Canvas(self.readNamePlayerFrame, width = self.readNameLoad.width, height = self.readNameLoad.height)
+        self.readNameImg = ImageTk.PhotoImage(self.readNameLoad)
+        self.readNameCanvas.create_image(0,0, image = self.readNameImg, anchor = tk.NW)
+        self.readNameCanvas.pack()
+
         self.readNameLbl = tk.Label(self.readNamePlayerFrame, text = "Nhập tên người chơi")
         self.readNameLbl.pack(side = tk.LEFT)
 
@@ -250,10 +270,11 @@ class Application(tk.Tk):
         self.readNamePlayerLoop += 1
 
         self.readNameBtn = tk.Button(self.readNamePlayerFrame, text = "Tiếp tục", command = self.readNameBtnEvent)
+        self.readNameBtn.bind("<Return>", self.readNameBtnEvent)
         self.readNameBtn.pack(side = tk.LEFT)
 
     
-    def readNameBtnEvent(self):
+    def readNameBtnEvent(self, event = None):
 
         self.readNamePlayerFrame.destroy()
 

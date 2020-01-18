@@ -102,17 +102,20 @@ class Application(tk.Tk):
         self.nightBtns.pack(side = tk.TOP)
 
         self.wolfButton = tk.Button(self.nightBtns, text = "Wolf", command = self.WolfTime)
+        self.wolfButton.bind("<Return>", self.WolfTime)
         self.wolfButton.pack(side = tk.LEFT)
 
         self.bodyquardButton = tk.Button(self.nightBtns, text = "Bodyquard", command = self.BodyQuardTime)
+        self.bodyquardButton.bind("<Return>", self.BodyQuardTime)
         self.bodyquardButton.pack(side = tk.LEFT)
 
         self.dayButton = tk.Button(self.nightBtns, text = "DayTime", command = self.dayTime)
+        self.dayButton.bind("<Return>", self.dayTime)
         self.dayButton.pack(side = tk.LEFT)
 
 
 
-    def dayTime(self):
+    def dayTime(self, event = None):
 
         self.nightFrame.destroy()
         self.currTimeLbl.config(text = self.currTimeText + "Day")
@@ -126,12 +129,13 @@ class Application(tk.Tk):
         self.dayBtns.pack()
         
         self.voteButton = tk.Button(self.dayBtns, text = "Vote", command = self.Vote)
+        self.voteButton.bind("<Return>", self.Vote)
         self.voteButton.pack()
         
         self.dayMsg = tk.Frame(self.dayFrame)
         self.dayMsg.pack()
 
-    def Vote(self):
+    def Vote(self, event = None):
 
         self.voteButton.config(state = tk.DISABLED)
 
@@ -139,6 +143,7 @@ class Application(tk.Tk):
         self.voteLbl.pack(side = tk.LEFT)
 
         self.voteEntry = tk.Entry(self.dayMsg, width = 2)
+        self.voteEntry.focus()
         self.voteEntry.pack(side = tk.LEFT)
         self.voteEntry.bind("<Return>", self.voteEntryEvent)
 
@@ -153,7 +158,7 @@ class Application(tk.Tk):
         self.nightTime()
 
 
-    def BodyQuardTime(self):
+    def BodyQuardTime(self, event = None):
 
         self.show(Bodyguard)
         self.bodyquardButton.config(state = tk.DISABLED)
@@ -165,6 +170,7 @@ class Application(tk.Tk):
         self.bodyquardLbl.grid(row = 2, column = 1)
 
         self.bodyquardEntry = tk.Entry(self.bodyquardFrame, width = 2)
+        self.bodyquardEntry.focus()
         self.bodyquardEntry.grid(row = 2, column = 2)
         self.bodyquardEntry.bind("<Return>", self.bodyquardEntryEvent)
 
@@ -179,7 +185,7 @@ class Application(tk.Tk):
         self.unshow()
         self.show(DEAD)
 
-    def WolfTime(self):
+    def WolfTime(self, event = None):
         
         self.show(Wolf)
         self.wolfButton.config(state = tk.DISABLED)
@@ -191,6 +197,7 @@ class Application(tk.Tk):
         self.wolfLbl.pack(side = tk.LEFT)
 
         self.wolfEntry = tk.Entry(self.wolfFrame, width = 2)
+        self.wolfEntry.focus()
         self.wolfEntry.pack(side = tk.LEFT)
         self.wolfEntry.bind("<Return>", self.wolfEntryEvent)
 
@@ -293,8 +300,3 @@ class Application(tk.Tk):
         self.welcomeFrame.destroy()
         self.readNamePlayer()
 
-
-
-app = Application()
-
-app.mainloop()

@@ -5,8 +5,9 @@ from PIL import Image, ImageTk
 from BorderFrame import BorderFrame
 from math import sqrt, floor, ceil
 
+import pygame
 
-
+pygame.init()
 
 class Application(tk.Tk):
 
@@ -16,15 +17,17 @@ class Application(tk.Tk):
         self.title("GameBoard: WereWolf")
         self.geometry('+600+200')
         self.welcome()
+        
 #-----------------------------------------------------------------
     def welcome(self):
 
-        self.image = ImageTk.PhotoImage(Image.open("bg.jpg"))
+        self.image = ImageTk.PhotoImage(Image.open("pic\\bg.jpg"))
         self.WelCanvas = tk.Canvas(self, height = 170, width = 225)
         self.WelCanvas.create_image(0, 0, image = self.image, anchor = tk.NW)
         self.WelCanvas.pack()
 
-
+        pygame.mixer.music.load("sound\\wolf_sound.mp3")
+        pygame.mixer.music.play()
 
         self.welcomeFrame = tk.Frame(self)
         self.welcomeFrame.pack()
@@ -92,6 +95,9 @@ class Application(tk.Tk):
 
     def nightTime(self):
 
+        pygame.mixer.music.load("sound\\wolf_sound(cut).mp3")
+        pygame.mixer.music.play()
+
         self.currTimeLbl.config(text = self.currTimeText + "Night")
 
         self.show(DEAD)
@@ -117,6 +123,8 @@ class Application(tk.Tk):
 
     def dayTime(self, event = None):
 
+        pygame.mixer.music.load("sound\\day_sound.mp3")
+        pygame.mixer.music.play()
         self.nightFrame.destroy()
         self.currTimeLbl.config(text = self.currTimeText + "Day")
 
@@ -247,7 +255,7 @@ class Application(tk.Tk):
         self.readNamePlayerFrame = tk.Frame(self)
         self.readNamePlayerFrame.pack()
 
-        self.readNameLoad = Image.open("draw_card.gif")
+        self.readNameLoad = Image.open("pic\\draw_card.gif")
         self.readNameCanvas = tk.Canvas(self.readNamePlayerFrame, width = self.readNameLoad.width, height = self.readNameLoad.height)
         self.readNameImg = ImageTk.PhotoImage(self.readNameLoad)
         self.readNameCanvas.create_image(0,0, image = self.readNameImg, anchor = tk.NW)
@@ -264,7 +272,9 @@ class Application(tk.Tk):
 
 
     def readNameEvent(self, event):
-
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\draw_card_sound.mp3")
+        pygame.mixer.music.play()
         name = self.readNameEntry.get()
         player = Player(name, self.readNamePlayerLoop)
         self.readNameEntry.configure(state = tk.DISABLED)
@@ -293,6 +303,7 @@ class Application(tk.Tk):
 
 
     def numPlayerEvent(self, event):
+        pygame.mixer.music.stop()
         self.WelCanvas.destroy()
         self.numPlayer = int(self.numPlayerEntry.get())
         self.gb = Game_board(self.numPlayer)

@@ -1,6 +1,7 @@
 import tkinter as tk 
 from Game_board import Game_board
 from Player import *
+from PIL import Image, ImageTk
 from BorderFrame import BorderFrame
 from math import sqrt, floor, ceil
 
@@ -13,16 +14,23 @@ class Application(tk.Tk):
 
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("GameBoard: WereWolf")
-        
+        self.geometry('+600+200')
         self.welcome()
 #-----------------------------------------------------------------
     def welcome(self):
 
+        self.image = ImageTk.PhotoImage(Image.open("bg.jpg"))
+        self.WelCanvas = tk.Canvas(self, height = 170, width = 225)
+        self.WelCanvas.create_image(0, 0, image = self.image, anchor = tk.NW)
+        self.WelCanvas.pack()
+
+
+
         self.welcomeFrame = tk.Frame(self)
         self.welcomeFrame.pack()
 
-        self.welcomeLbl = tk.Label(self.welcomeFrame, text = "Welcome to game")
-        self.welcomeLbl.pack(side = tk.TOP)
+    #    self.welcomeLbl = tk.Label(self.welcomeFrame, text = "Welcome to game", font = ('40'), fg = "red")
+    #   self.welcomeLbl.pack(side = tk.TOP, padx = 5, pady = 5)
 
         self.numPlayerLbl = tk.Label(self.welcomeFrame, text = "Nhập số người chơi")
         self.numPlayerLbl.pack(side = tk.LEFT)
@@ -257,7 +265,7 @@ class Application(tk.Tk):
 
 
     def numPlayerEvent(self, event):
-
+        self.WelCanvas.destroy()
         self.numPlayer = int(self.numPlayerEntry.get())
         self.gb = Game_board(self.numPlayer)
 

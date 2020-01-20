@@ -28,11 +28,12 @@ class BorderFrame(tk.Frame):
         self.cardNameLbl = tk.Label(self, text = self.cardNameText)
         self.cardNameLbl.grid(row = 3)
         self.cardNameLbl.grid_remove()
+        self.card = self.player.card
 
     def update(self):
 
-        self.cardNameText = self.player.name
-        self.cardNameLbl.config(text = self.cardNameText)
+        self.nameText = str(self.player.index + 1) + ". " + self.player.name
+        self.nameLbl.config(text = self.nameText)
 
         self.statusText = self.player.status
         self.statusLbl.config(text = self.statusText)
@@ -40,6 +41,8 @@ class BorderFrame(tk.Frame):
         self.cardNameText = self.player.card_name
         self.cardNameLbl.config(text = self.cardNameText)
         
+        self.card = self.player.card
+
         if self.statusText == DEAD:
             self.statusLbl.config(fg = "red")
             self.cardNameLbl.config(fg = "red")
@@ -47,12 +50,30 @@ class BorderFrame(tk.Frame):
     def show(self, sth):
 
         self.update()
+        if sth == None:
+            self.cardNameLbl.grid()
+            self.statusLbl.grid()
+            return
         if sth == self.player.card:
             self.cardNameLbl.grid()
+            return
         elif sth == self.player.status:
             self.statusLbl.grid()
+            return
+        
 
-    def hide(self):
 
-        self.cardNameLbl.grid_remove()
-        self.statusLbl.grid_remove()
+    def hide(self, sth = None):
+        if sth:
+            if sth == self.card:
+                self.cardNameLbl.grid_remove()
+        
+            if sth == self.statusText:
+                self.statusLbl.grid_remove()
+        else:
+            self.cardNameLbl.grid_remove()
+            self.statusLbl.grid_remove()
+            
+
+        
+

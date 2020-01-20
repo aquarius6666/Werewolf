@@ -4,7 +4,7 @@ from Player import *
 from PIL import Image, ImageTk
 from BorderFrame import BorderFrame
 from math import sqrt, floor, ceil
-
+from tkinter import messagebox  
 import pygame
 
 pygame.init()
@@ -49,12 +49,26 @@ class Application(tk.Tk):
         self.readNamePlayerLoop = 0
         self.readName()
 
+
+    def endGame(self):
+        self.reveal()
+        text = self.gb.winner + " win"
+        
+        pygame.mixer.music.load("sound\\win_sound.mp3")
+        pygame.mixer.music.play()
+        messagebox.showinfo("End Game!", text)
+        
+
+
     def board(self):
 
         self.boardFrame = tk.Frame(self)
         self.boardFrame.pack()
 
         self.borderFrames = []
+
+        self.wizzard_canKill = True
+        self.wizzard_canHeal = True
 
         index = 0
         self.findHozVer()
@@ -100,6 +114,10 @@ class Application(tk.Tk):
 
         self.currTimeLbl.config(text = self.currTimeText + "Night")
 
+        if self.gb.isEndGame():
+
+            self.endGame()
+            
         self.show(DEAD)
         self.nightFrame = tk.Frame(self)
         self.nightFrame.pack()
@@ -115,6 +133,10 @@ class Application(tk.Tk):
         self.bodyquardButton.bind("<Return>", self.BodyQuardTime)
         self.bodyquardButton.pack(side = tk.LEFT)
 
+        self.wizzardButton = tk.Button(self.nightBtns, text = "Wizzard", command = self.WizzardTime, state = tk.DISABLED)
+        self.wizzardButton.bind("<Return>", self.WizzardTime)
+        self.wizzardButton.pack(side = tk.LEFT)
+
         self.dayButton = tk.Button(self.nightBtns, text = "DayTime", command = self.dayTime)
         self.dayButton.bind("<Return>", self.dayTime)
         self.dayButton.pack(side = tk.LEFT)
@@ -129,6 +151,8 @@ class Application(tk.Tk):
         self.currTimeLbl.config(text = self.currTimeText + "Day")
 
         self.preday()
+
+
         self.show(DEAD)
         self.dayFrame = tk.Frame(self)
         self.dayFrame.pack()
@@ -166,6 +190,66 @@ class Application(tk.Tk):
         self.nightTime()
 
 
+    def WizzardTime(self, event = None):
+        self.show(ATTACKED)
+        self.show(Wizzard)
+        self.wizzardButton.config(state = tk.DISABLED)
+
+        self.wizzard_count = 0
+
+        self.wizzardFrame = tk.Frame(self.nightFrame)
+        self.wizzardFrame.pack(side = tk.TOP, padx = 2, pady = 2)
+
+        self.wizzardKillLbl = tk.Label(self.wizzardFrame, text = "Chọn 1 người để giết")
+        self.wizzardKillLbl.grid(row = 2, column = 1)
+
+        self.wizzardKillEntry = tk.Entry(self.wizzardFrame, width = 2)
+        self.wizzardKillEntry.grid(row = 2, column = 2)
+        self.wizzardKillEntry.focus()
+        self.wizzardKillEntry.bind("<Return>", self.wizzard_killEvent)
+
+        self.wizzardHealLbl = tk.Label(self.wizzardFrame, text = "Bạn có muốn cứu người này không")
+        self.wizzardHealLbl.grid(row = 3, column = 1)
+        self.wizzardHealEntry = tk.Entry(self.wizzardFrame, width = 2)
+        self.wizzardHealEntry.grid(row = 3, column = 2)
+        self.wizzardHealEntry.bind("<Return>", self.wizzard_healEvent)
+
+    def wizzard_healEvent(self, event):
+
+        temp = int(self.wizzardHealEntry.get())
+        self.wizzardHealEntry.config(state = tk.DISABLED)
+        if temp != 0 and self.gb.count(Wizzard) and self.wizzard_canHeal:
+            for p in self.gb.p:
+                if p.isSth(ATTACKED):
+                    self.unshow(ATTACKED)
+                    p.status = ALIVE
+            
+            self.wizzard_canHeal = False
+
+        self.wizzard_count += 1
+        if self.wizzard_count == 2:
+            self.wizzardFrame.destroy()
+            self.unshow(Wizzard)
+
+    def wizzard_killEvent(self, event):
+
+        target = int(self.wizzardKillEntry.get())
+        self.wizzardKillEntry.config(state = tk.DISABLED)
+        if target == 0:
+            return
+
+        if self.wizzard_canKill and self.gb.count(Wizzard):
+            target -= 1
+            self.gb.p[target].update(DEAD)
+            self.wizzard_canKill = False
+        
+        self.wizzard_count += 1
+        if self.wizzard_count == 2:
+            self.wizzardFrame.destroy()
+            self.unshow(Wizzard)
+
+            
+
     def BodyQuardTime(self, event = None):
 
         self.show(Bodyguard)
@@ -190,13 +274,14 @@ class Application(tk.Tk):
 
         self.bodyquardFrame.destroy()
 
-        self.unshow()
+        self.unshow(Bodyguard)
         self.show(DEAD)
 
     def WolfTime(self, event = None):
         
         self.show(Wolf)
         self.wolfButton.config(state = tk.DISABLED)
+        self.wizzardButton.config(state = tk.NORMAL)
 
         self.wolfFrame = tk.Frame(self.nightFrame)
         self.wolfFrame.pack(side = tk.TOP, padx = 2, pady = 2)
@@ -218,18 +303,34 @@ class Application(tk.Tk):
             
         self.wolfFrame.destroy()
 
-        self.unshow()
+        self.unshow(Wolf)
         self.show(DEAD)
 
+    def reveal(self):
+        
+        self.show(None)
 
     def preday(self):
         for i in range(0, self.numPlayer):
             if self.gb.p[i].status == ATTACKED:
                 self.gb.p[i].status = DEAD
+            
+            if self.gb.p[i].status == PROTECTED:
+                self.gb.p[i].status = ALIVE
 
-    def unshow(self):
-        for i in range(0, self.numPlayer):
-            self.borderFrames[i].hide()
+        if self.gb.isEndGame():
+
+            self.endGame()
+
+
+    def unshow(self, sth = None):
+        if sth:
+            for i in range(0, self.numPlayer):
+                self.borderFrames[i].hide(sth)
+        else:
+            for i in range(0, self.numPlayer):
+                self.borderFrames[i].hide()
+
     def show(self, sth):
 
         for i in range(0, self.numPlayer):
@@ -292,7 +393,6 @@ class Application(tk.Tk):
 
     
     def readNameBtnEvent(self, event = None):
-
         self.readNamePlayerFrame.destroy()
 
         if (self.readNamePlayerLoop < self.numPlayer):

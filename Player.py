@@ -13,6 +13,10 @@ def Wolf():
 def Villager():
     return "Villager"
 
+def Wizzard():
+    return "Wizzard"
+
+
 class Player:
 
     def __init__(self, name, id):
@@ -29,9 +33,11 @@ class Player:
     def update(self, sth):
 
         if type(sth) == type(self.status):
-            if self.status == PROTECTED and sth == ATTACKED:
-                return 
-            self.status = sth
+            if (self.status == PROTECTED and sth == ATTACKED) or (self.status == ATTACKED and sth == PROTECTED):
+                self.status = PROTECTED
+            
+            else:
+                self.status = sth
 
         elif type(sth) == type(self.card):
             self.card = sth

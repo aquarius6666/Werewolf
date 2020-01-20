@@ -7,9 +7,13 @@ class Game_board():
         
         self.numPlayer = num
         self.nWolf = self.numPlayer // 3
+
         self.nBodyquard = 1
-        self.nVillager = self.numPlayer - self.nWolf - self.nBodyquard
-        self.list = [Wolf] * self.nWolf + [Villager] * self.nVillager + [Bodyguard] * self.nBodyquard
+        self.nWizzard = 1
+
+        self.nVillager = self.numPlayer - self.nWolf - self.nBodyquard - self.nWizzard
+
+        self.list = [Wolf] * self.nWolf + [Villager] * self.nVillager + [Bodyguard] * self.nBodyquard + [Wizzard] * self.nWizzard
         self.p = []
 
     def initPlayer(self, player):
@@ -25,3 +29,19 @@ class Game_board():
                 c += 1
 
         return c
+
+    def isEndGame(self):
+        nAlive = self.count(ALIVE)
+        nWolfAlive = self.count(Wolf)
+        nNonWolfAlive = nAlive - nWolfAlive
+
+        if nWolfAlive == 0:
+            self.winner = Villager()
+            return True
+
+        if nNonWolfAlive <= nWolfAlive:
+            self.winner = Wolf()
+            return True
+        
+        
+        return False

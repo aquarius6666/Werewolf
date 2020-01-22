@@ -5,7 +5,7 @@ ATTACKED = "Attacked"
 PROTECTED = "Protected"
 
 def Bodyguard():
-    return "Bodyquard"
+    return "Bodyguard"
 
 def Wolf():
     return "Wolf"

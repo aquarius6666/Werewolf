@@ -18,7 +18,7 @@ class Application(tk.Tk):
         self.geometry('+600+200')
         self.welcome()
         
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
     def welcome(self):
 
         self.image = ImageTk.PhotoImage(Image.open("pic\\bg.jpg"))
@@ -26,14 +26,12 @@ class Application(tk.Tk):
         self.WelCanvas.create_image(0, 0, image = self.image, anchor = tk.NW)
         self.WelCanvas.pack()
 
+
         pygame.mixer.music.load("sound\\wolf_sound.mp3")
         pygame.mixer.music.play()
 
         self.welcomeFrame = tk.Frame(self)
         self.welcomeFrame.pack()
-
-    #    self.welcomeLbl = tk.Label(self.welcomeFrame, text = "Welcome to game", font = ('40'), fg = "red")
-    #   self.welcomeLbl.pack(side = tk.TOP, padx = 5, pady = 5)
 
         self.numPlayerLbl = tk.Label(self.welcomeFrame, text = "Nhập số người chơi")
         self.numPlayerLbl.pack(side = tk.LEFT)
@@ -95,7 +93,8 @@ class Application(tk.Tk):
 
         self.currTime()
         self.dayFrame = tk.Frame(self)
-   
+ #-------------------------------------------------------------------------------
+  
     def currTime(self):
 
         self.currTimeFrame = tk.Frame(self)
@@ -129,9 +128,9 @@ class Application(tk.Tk):
         self.wolfButton.bind("<Return>", self.WolfTime)
         self.wolfButton.pack(side = tk.LEFT)
 
-        self.bodyquardButton = tk.Button(self.nightBtns, text = "Bodyquard", command = self.BodyQuardTime)
-        self.bodyquardButton.bind("<Return>", self.BodyQuardTime)
-        self.bodyquardButton.pack(side = tk.LEFT)
+        self.bodyguardButton = tk.Button(self.nightBtns, text = "Bodyguard", command = self.BodyGuardTime)
+        self.bodyguardButton.bind("<Return>", self.BodyGuardTime)
+        self.bodyguardButton.pack(side = tk.LEFT)
 
         self.wizzardButton = tk.Button(self.nightBtns, text = "Wizzard", command = self.WizzardTime, state = tk.DISABLED)
         self.wizzardButton.bind("<Return>", self.WizzardTime)
@@ -167,8 +166,12 @@ class Application(tk.Tk):
         self.dayMsg = tk.Frame(self.dayFrame)
         self.dayMsg.pack()
 
-    def Vote(self, event = None):
+#-------------------------------------------------------------------------------
 
+    def Vote(self, event = None):
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\vote_time_sound.mp3")
+        pygame.mixer.music.play()
         self.voteButton.config(state = tk.DISABLED)
 
         self.voteLbl = tk.Label(self.dayMsg, text = "Chọn treo cổ 1 người")
@@ -180,7 +183,9 @@ class Application(tk.Tk):
         self.voteEntry.bind("<Return>", self.voteEntryEvent)
 
     def voteEntryEvent(self, event):
-
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\vote_end_sound.mp3")
+        pygame.mixer.music.play()
         target = int(self.voteEntry.get())
         target -= 1
         self.gb.p[target].update(DEAD)
@@ -189,8 +194,11 @@ class Application(tk.Tk):
         self.dayFrame.destroy()
         self.nightTime()
 
-
+#-------------------------------------------------------------------------------
     def WizzardTime(self, event = None):
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\wizzard_call_sound.mp3")
+        pygame.mixer.music.play()
         self.show(ATTACKED)
         self.show(Wizzard)
         self.wizzardButton.config(state = tk.DISABLED)
@@ -215,7 +223,9 @@ class Application(tk.Tk):
         self.wizzardHealEntry.bind("<Return>", self.wizzard_healEvent)
 
     def wizzard_healEvent(self, event):
-
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\wizzard_heal_sound.mp3")
+        pygame.mixer.music.play()
         temp = int(self.wizzardHealEntry.get())
         self.wizzardHealEntry.config(state = tk.DISABLED)
         if temp != 0 and self.gb.count(Wizzard) and self.wizzard_canHeal:
@@ -232,7 +242,9 @@ class Application(tk.Tk):
             self.unshow(Wizzard)
 
     def wizzard_killEvent(self, event):
-
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\wizzard_kill_sound.mp3")
+        pygame.mixer.music.play()
         target = int(self.wizzardKillEntry.get())
         self.wizzardKillEntry.config(state = tk.DISABLED)
         if target == 0:
@@ -248,37 +260,46 @@ class Application(tk.Tk):
             self.wizzardFrame.destroy()
             self.unshow(Wizzard)
 
-            
+#-------------------------------------------------------------------------------
 
-    def BodyQuardTime(self, event = None):
-
+    def BodyGuardTime(self, event = None):
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\bodyguard_call_sound.mp3")
+        pygame.mixer.music.play()
         self.show(Bodyguard)
-        self.bodyquardButton.config(state = tk.DISABLED)
+        self.bodyguardButton.config(state = tk.DISABLED)
 
-        self.bodyquardFrame = tk.Frame(self.nightFrame)
-        self.bodyquardFrame.pack(side = tk.TOP, padx = 2, pady = 2)
+        self.bodyguardFrame = tk.Frame(self.nightFrame)
+        self.bodyguardFrame.pack(side = tk.TOP, padx = 2, pady = 2)
 
-        self.bodyquardLbl = tk.Label(self.bodyquardFrame, text = "Bảo vệ chọn 1 người để bảo vệ")
-        self.bodyquardLbl.grid(row = 2, column = 1)
+        self.bodyguardLbl = tk.Label(self.bodyguardFrame, text = "Bảo vệ chọn 1 người để bảo vệ")
+        self.bodyguardLbl.grid(row = 2, column = 1)
 
-        self.bodyquardEntry = tk.Entry(self.bodyquardFrame, width = 2)
-        self.bodyquardEntry.focus()
-        self.bodyquardEntry.grid(row = 2, column = 2)
-        self.bodyquardEntry.bind("<Return>", self.bodyquardEntryEvent)
+        self.bodyguardEntry = tk.Entry(self.bodyguardFrame, width = 2)
+        self.bodyguardEntry.focus()
+        self.bodyguardEntry.grid(row = 2, column = 2)
+        self.bodyguardEntry.bind("<Return>", self.bodyguardEntryEvent)
 
-    def bodyquardEntryEvent(self, event):
+    def bodyguardEntryEvent(self, event):
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\bodyguard_end_sound.mp3")
+        pygame.mixer.music.play()
         if self.gb.count(Bodyguard):
-            target = int(self.bodyquardEntry.get())
+            target = int(self.bodyguardEntry.get())
             target -= 1
             self.gb.p[target].update(PROTECTED)
 
-        self.bodyquardFrame.destroy()
+        self.bodyguardFrame.destroy()
 
         self.unshow(Bodyguard)
         self.show(DEAD)
 
+#-------------------------------------------------------------------------------
+
     def WolfTime(self, event = None):
-        
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\wolf_call_sound.mp3")
+        pygame.mixer.music.play()
         self.show(Wolf)
         self.wolfButton.config(state = tk.DISABLED)
         self.wizzardButton.config(state = tk.NORMAL)
@@ -295,7 +316,9 @@ class Application(tk.Tk):
         self.wolfEntry.bind("<Return>", self.wolfEntryEvent)
 
     def wolfEntryEvent(self, event):
-
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\wolf_bite_sound.mp3")
+        pygame.mixer.music.play()
         if self.gb.count(Wolf):
             target = int(self.wolfEntry.get())
             target -= 1
@@ -304,7 +327,9 @@ class Application(tk.Tk):
         self.wolfFrame.destroy()
 
         self.unshow(Wolf)
-        self.show(DEAD)
+
+
+#-------------------------------------------------------------------------------
 
     def reveal(self):
         

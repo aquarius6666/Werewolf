@@ -132,13 +132,19 @@ class Application(tk.Tk):
         self.bodyguardButton.bind("<Return>", self.BodyGuardTime)
         self.bodyguardButton.pack(side = tk.LEFT)
 
-        self.wizzardButton = tk.Button(self.nightBtns, text = "Wizzard", command = self.WizzardTime, state = tk.DISABLED)
-        self.wizzardButton.bind("<Return>", self.WizzardTime)
-        self.wizzardButton.pack(side = tk.LEFT)
+        if self.gb.nWizzard == 1:
+            self.wizzardButton = tk.Button(self.nightBtns, text = "Wizzard", command = self.WizzardTime, state = tk.DISABLED)
+            self.wizzardButton.bind("<Return>", self.WizzardTime)
+            self.wizzardButton.pack(side = tk.LEFT)
+        if self.gb.nSeer == 1:
+            self.seerButton = tk.Button(self.nightBtns, text = "Seer", command = self.SeerTime, state = tk.DISABLED)
+            self.seerButton.bind("<Return>", self.SeerTime)
+            self.seerButton.pack(side = tk.LEFT)
 
         self.dayButton = tk.Button(self.nightBtns, text = "DayTime", command = self.dayTime)
         self.dayButton.bind("<Return>", self.dayTime)
         self.dayButton.pack(side = tk.LEFT)
+
 
 
 
@@ -193,7 +199,40 @@ class Application(tk.Tk):
         
         self.dayFrame.destroy()
         self.nightTime()
+#-------------------------------------------------------------------------------
 
+    def SeerTime(self, event = None):
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("sound\\seer_call_sound.mp3")
+        pygame.mixer.music.play()
+        self.show(Seer)
+        self.seerButton.config(state = tk.DISABLED)
+
+        self.seerFrame = tk.Frame(self.nightFrame)
+        self.seerFrame.pack(side = tk.TOP, padx = 2, pady = 2)
+
+        self.seerLbl = tk.Label(self.seerFrame, text = "Chọn kiểm tra 1 người")
+        self.seerLbl.grid(row = 1, column = 1)
+        
+        self.seerEntry = tk.Entry(self.seerFrame, width = 2)
+        self.seerEntry.grid(row = 1, column = 2)
+        self.seerEntry.bind("<Return>", self.seerEvent)
+
+    def seerEvent(self, event):
+        
+        if self.gb.count(Seer):
+            target = int(self.seerEntry.get()) - 1
+            if self.gb.p[target].isSth(Wolf):
+                self.seerText = "No"
+            else:
+                self.seerText = "Yes"
+            self.annLbl = tk.Label(self.seerFrame, text = self.seerText)
+            self.annLbl.grid(row = 2, columnspan = 2)
+        
+            self.timeCount = tk.Label(self.seerFrame)
+            self.timeCount.grid(row = 3)
+            self.timeCount.after(3000, self.seerFrame.destroy())
+            self.unshow(Seer)
 #-------------------------------------------------------------------------------
     def WizzardTime(self, event = None):
         pygame.mixer.music.stop()
@@ -303,6 +342,7 @@ class Application(tk.Tk):
         self.show(Wolf)
         self.wolfButton.config(state = tk.DISABLED)
         self.wizzardButton.config(state = tk.NORMAL)
+        self.seerButton.config(state = tk.NORMAL)
 
         self.wolfFrame = tk.Frame(self.nightFrame)
         self.wolfFrame.pack(side = tk.TOP, padx = 2, pady = 2)

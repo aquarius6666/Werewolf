@@ -16,6 +16,8 @@ def Villager():
 def Wizzard():
     return "Wizzard"
 
+def Seer():
+    return "Seer"
 
 class Player:
 
